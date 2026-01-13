@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getWorkshops } from "@/lib/service/workshopService"
 import { format } from "date-fns"
+import { useTranslations } from 'next-intl'
 
 interface Workshop {
   id: string
@@ -35,6 +36,7 @@ interface ScheduleItem {
 }
 
 export function WorkshopSchedule() {
+  const t = useTranslations('schedule')
   const [workshops, setWorkshops] = useState<Workshop[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -93,11 +95,11 @@ export function WorkshopSchedule() {
   // Get status text based on seats left
   const getStatusText = (seatsLeft: number, capacity: number) => {
     if (seatsLeft <= 0) {
-      return 'Fully Booked'
+      return t('fullyBooked')
     } else if (seatsLeft <= 3) {
-      return 'Almost full!'
+      return t('almostFull')
     } else {
-      return `${seatsLeft} seats left`
+      return t('seatsLeft', { count: seatsLeft })
     }
   }
 
@@ -178,13 +180,13 @@ export function WorkshopSchedule() {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Upcoming Workshops</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Plan your creative journey with our monthly schedule
+              {t('subtitle')}
             </p>
           </div>
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No upcoming workshops scheduled.</p>
+            <p className="text-muted-foreground">{t('emptyState')}</p>
           </div>
         </div>
       </section>
@@ -194,9 +196,9 @@ export function WorkshopSchedule() {
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Upcoming Workshops</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Plan your creative journey with our monthly schedule
+            {t('subtitle')}
           </p>
         </div>
 

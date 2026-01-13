@@ -1,0 +1,146 @@
+{
+  "hero": {
+    "title": "Créez, Connectez-vous et",
+    "titleHighlight": "Créez Votre Histoire",
+    "description": "Rejoignez My_Space pour des ateliers d'art pratiques où la créativité coule librement. Peignez, modelez et cousez votre chemin vers de belles créations.",
+    "bookButton": "Réservez Votre Place",
+    "exploreButton": "Découvrir les Ateliers",
+    "imageAlt": "Participants à l'atelier créant de l'art ensemble"
+  },
+  "schedule": {
+    "title": "Ateliers à Venir",
+    "subtitle": "Planifiez votre parcours créatif avec notre calendrier mensuel",
+    "emptyState": "Aucun atelier à venir programmé.",
+    "fullyBooked": "Complet",
+    "almostFull": "Presque complet !",
+    "seatsLeft": "{count} places restantes"
+  },
+  "grid": {
+    "title": "Choisissez Votre Aventure Créative",
+    "subtitle": "De la peinture à la poterie, trouvez l'atelier parfait pour libérer votre créativité",
+    "emptyState": "Aucun atelier disponible pour le moment.",
+    "fullyBooked": "Complet",
+    "onlyLeft": "Plus que {count} places !",
+    "full": "Complet",
+    "seatsLeft": "{count} places restantes",
+    "bookNow": "Réserver Maintenant"
+  },
+  "details": {
+    "title": "Détails des Ateliers",
+    "subtitle": "Tout ce que vous devez savoir avant de réserver",
+    "labels": {
+      "learn": "Ce que vous apprendrez",
+      "included": "Ce qui est inclus",
+      "skillLevel": "Niveau requis",
+      "duration": "Durée"
+    },
+    "toteBag": {
+      "title": "Peinture sur Tote Bag",
+      "learn": "Mélange des couleurs, techniques de pochoir, application de peinture sur tissu, composition de design",
+      "included": "Tote bag en toile, peintures pour tissu, pinceaux, pochoirs, tablier, tous les matériaux",
+      "skillLevel": "Adapté aux débutants - Aucune expérience requise !",
+      "duration": "2 heures de créativité"
+    },
+    "pottery": {
+      "title": "Tour de Poterie",
+      "learn": "Centrage de l'argile, façonnage des parois, création de bols et cylindres, bases du tournage",
+      "included": "3 livres d'argile, service de glaçage, cuisson au four, tablier",
+      "skillLevel": "Débutant à intermédiaire - Instructions patientes fournies",
+      "duration": "3 heures sur le tour"
+    },
+    "sewing": {
+      "title": "Atelier de Couture",
+      "learn": "Bases de la machine, point droit, suivi de patrons, techniques de finition",
+      "included": "Utilisation de la machine à coudre, tissu, fil, patrons, outils, projet à emporter",
+      "skillLevel": "Débutants complets bienvenus",
+      "duration": "3 heures de pratique pratique"
+    },
+    "bring": {
+      "title": "Ce qu'il faut apporter",
+      "description": "Apportez simplement vous-même et votre créativité ! Nous fournissons tous les matériaux, outils et équipements. Portez des vêtements confortables que vous ne craignez pas de salir un peu. Nous fournissons des tabliers, mais la peinture pour tissu et l'argile peuvent parfois se retrouver sur les vêtements."
+    }
+  },
+  "bio": {
+    "title": "Rencontrez Votre Instructrice",
+    "subtitle": "Apprenez d'une artiste et éducatrice passionnée",
+    "name": "Sarah Chen",
+    "role": "Fondatrice & Instructrice Principale",
+    "description": "Sarah a fondé My_Space avec la vision de rendre l'art accessible à tous. Avec plus de 15 ans d'expérience dans les arts textiles, la céramique et les techniques mixtes, elle croit que la créativité n'est pas un talent—c'est une pratique que chacun peut développer.",
+    "degree": {
+      "title": "MFA Céramique",
+      "school": "Rhode Island School of Design"
+    },
+    "students": {
+      "count": "500+ Étudiants",
+      "description": "Enseignés & inspirés"
+    },
+    "community": {
+      "title": "Bâtisseuse de Communauté",
+      "description": "Créer des espaces pour la connexion"
+    },
+    "quote": "Ma partie préférée de l'enseignement est de voir ce moment où quelqu'un réalise qu'il est capable de créer quelque chose de beau. Cette étincelle de confiance change tout."
+  },
+  "gallery": {
+    "title": "Galerie",
+    "subtitle": "Moments de créativité et de connexion de nos ateliers",
+    "alt": {
+      "toteBag": "Peinture sur tote bag en cours",
+      "potteryWheel": "Session de tour de poterie",
+      "participants": "Participants heureux à l'atelier",
+      "potteryPieces": "Pièces de poterie terminées",
+      "sewingWorkshop": "Atelier de couture en action",
+      "studioAtmosphere": "Ambiance de l'atelier",
+      "embroidery": "Détail de broderie",
+      "community": "Communauté créative",
+      "ceramicCollection": "Collection de céramique"
+    }
+  },
+  "testimonials": {
+    "title": "Ce Que Disent Nos Étudiants",
+    "subtitle": "Rejoignez des centaines de créateurs heureux qui ont découvert leur côté créatif",
+    "items": {
+      "0": {
+        "name": "Emma Rodriguez",
+        "text": "J'ai créé mon premier bol en poterie et j'en suis obsédée ! Le style d'enseignement patient de Sarah a rendu quelque chose que je pensais impossible totalement réalisable. J'ai hâte au prochain cours !"
+      },
+      "1": {
+        "name": "Marcus Johnson",
+        "text": "Le tote bag que j'ai peint est maintenant mon accessoire préféré ! Tout le monde me demande où je l'ai trouvé. Une expérience si amusante et relaxante. Activité de couple parfaite !"
+      },
+      "2": {
+        "name": "Priya Patel",
+        "text": "En tant que personne qui n'a jamais pensé être 'artiste', cet atelier a changé ma perspective. L'environnement bienveillant et les instructions claires m'ont aidé à créer quelque chose dont je suis vraiment fier."
+      },
+      "3": {
+        "name": "James Chen",
+        "text": "Je suis venu avec ma sœur et nous avons passé un moment incroyable ! L'atelier de couture m'a enseigné des compétences pratiques tout en étant incroyablement amusant. Sarah est une enseignante fantastique."
+      },
+      "4": {
+        "name": "Lisa Thompson",
+        "text": "J'ai assisté à trois ateliers différents maintenant et chacun a été merveilleux. La communauté ici est si accueillante, et j'adore avoir des pièces faites à la main à utiliser et à offrir."
+      }
+    }
+  },
+  "footer": {
+    "brand": "My_Space",
+    "description": "Un espace d'atelier créatif où les expériences artistiques pratiques rassemblent les gens. Peignez, modelez, cousez et créez quelque chose d'uniquement vôtre.",
+    "contact": {
+      "title": "Contact",
+      "address": {
+        "line1": "212 Creative Avenue",
+        "line2": "Casablanca, Maroc 11201"
+      },
+      "email": "hello@myspace.com",
+      "phone": "(555) 212-3456"
+    },
+    "links": {
+      "title": "Liens Rapides",
+      "workshops": "Ateliers",
+      "schedule": "Calendrier",
+      "faq": "FAQ",
+      "terms": "Conditions Générales",
+      "privateEvents": "Événements Privés"
+    },
+    "copyright": "© 2026 My_Space. Tous droits réservés. Créé avec amour et créativité."
+  }
+}

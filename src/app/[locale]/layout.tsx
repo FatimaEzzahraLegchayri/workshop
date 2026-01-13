@@ -1,7 +1,10 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Lexend, Caveat } from "next/font/google"
-import "./globals.css"
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages, getLocale } from 'next-intl/server'
+import { defaultLocale } from '@/lib/i18n-config'
+import "@/app/globals.css"
 
 const lexend = Lexend({ subsets: ["latin"], variable: "--font-lexend" })
 const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat" })
@@ -38,15 +41,21 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // Get locale from request, fallback to default
+  const locale = await getLocale() || defaultLocale
+  const messages = await getMessages()
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={`${lexend.variable} ${caveat.variable} font-sans antialiased`}>
-        {children}
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          {children}
+        </NextIntlClientProvider>
         {/* <Analytics /> */}
       </body>
     </html>

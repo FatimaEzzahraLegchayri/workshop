@@ -1,0 +1,146 @@
+{
+  "hero": {
+    "title": "Create, Connect, and",
+    "titleHighlight": "Craft Your Story",
+    "description": "Join My_Space for hands-on art workshops where creativity flows freely. Paint, mold, and sew your way to beautiful creations.",
+    "bookButton": "Book Your Seat",
+    "exploreButton": "Explore Workshops",
+    "imageAlt": "Workshop participants creating art together"
+  },
+  "schedule": {
+    "title": "Upcoming Workshops",
+    "subtitle": "Plan your creative journey with our monthly schedule",
+    "emptyState": "No upcoming workshops scheduled.",
+    "fullyBooked": "Fully Booked",
+    "almostFull": "Almost full!",
+    "seatsLeft": "{count} seats left"
+  },
+  "grid": {
+    "title": "Choose Your Creative Adventure",
+    "subtitle": "From painting to pottery, find the perfect workshop to unleash your creativity",
+    "emptyState": "No workshops available at the moment.",
+    "fullyBooked": "Fully Booked",
+    "onlyLeft": "Only {count} left!",
+    "full": "Full",
+    "seatsLeft": "{count} seats left",
+    "bookNow": "Book Now"
+  },
+  "details": {
+    "title": "Workshop Details",
+    "subtitle": "Everything you need to know before booking",
+    "labels": {
+      "learn": "What you'll learn",
+      "included": "What's included",
+      "skillLevel": "Skill level",
+      "duration": "Duration"
+    },
+    "toteBag": {
+      "title": "Tote Bag Painting",
+      "learn": "Color mixing, stencil techniques, fabric paint application, design composition",
+      "included": "Canvas tote bag, fabric paints, brushes, stencils, apron, all materials",
+      "skillLevel": "Beginner-friendly - No experience needed!",
+      "duration": "2 hours of creative fun"
+    },
+    "pottery": {
+      "title": "Pottery Wheel",
+      "learn": "Centering clay, pulling walls, shaping bowls and cylinders, trimming basics",
+      "included": "3 lbs of clay, glazing service, kiln firing, apron",
+      "skillLevel": "Beginner to intermediate - Patient instruction provided",
+      "duration": "3 hours on the wheel"
+    },
+    "sewing": {
+      "title": "Sewing Workshop",
+      "learn": "Machine basics, straight stitching, following patterns, finishing techniques",
+      "included": "Sewing machine use, fabric, thread, patterns, tools, take-home project",
+      "skillLevel": "Complete beginners welcome",
+      "duration": "3 hours of hands-on practice"
+    },
+    "bring": {
+      "title": "What to Bring",
+      "description": "Just bring yourself and your creativity! We provide all materials, tools, and equipment. Wear comfortable clothes you don't mind getting a little messy. We provide aprons, but fabric paint and clay can sometimes find their way onto clothing."
+    }
+  },
+  "bio": {
+    "title": "Meet Your Instructor",
+    "subtitle": "Learn from a passionate artist and educator",
+    "name": "Sarah Chen",
+    "role": "Founder & Lead Instructor",
+    "description": "Sarah founded My_Space with a vision to make art accessible to everyone. With over 15 years of experience in textile arts, ceramics, and mixed media, she believes that creativity is not a talent—it's a practice that anyone can develop.",
+    "degree": {
+      "title": "MFA Ceramics",
+      "school": "Rhode Island School of Design"
+    },
+    "students": {
+      "count": "500+ Students",
+      "description": "Taught & inspired"
+    },
+    "community": {
+      "title": "Community Builder",
+      "description": "Creating spaces for connection"
+    },
+    "quote": "My favorite part of teaching is watching that moment when someone realizes they're capable of creating something beautiful. That spark of confidence changes everything."
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "Moments of creativity and connection from our workshops",
+    "alt": {
+      "toteBag": "Tote bag painting in progress",
+      "potteryWheel": "Pottery wheel session",
+      "participants": "Happy workshop participants",
+      "potteryPieces": "Finished pottery pieces",
+      "sewingWorkshop": "Sewing workshop in action",
+      "studioAtmosphere": "Studio atmosphere",
+      "embroidery": "Embroidery detail",
+      "community": "Creative community",
+      "ceramicCollection": "Ceramic collection"
+    }
+  },
+  "testimonials": {
+    "title": "What Our Students Say",
+    "subtitle": "Join hundreds of happy makers who've discovered their creative side",
+    "items": {
+      "0": {
+        "name": "Emma Rodriguez",
+        "text": "I made my first pottery bowl and I'm obsessed! Sarah's patient teaching style made something I thought was impossible feel totally doable. Can't wait for the next class!"
+      },
+      "1": {
+        "name": "Marcus Johnson",
+        "text": "The tote bag I painted is my favorite accessory now! Everyone asks where I got it. Such a fun, relaxing experience. Perfect date activity!"
+      },
+      "2": {
+        "name": "Priya Patel",
+        "text": "As someone who never thought they were 'artistic,' this workshop changed my perspective. The supportive environment and clear instruction helped me create something I'm genuinely proud of."
+      },
+      "3": {
+        "name": "James Chen",
+        "text": "Came with my sister and had an amazing time! The sewing workshop taught me practical skills while being incredibly fun. Sarah is a fantastic teacher."
+      },
+      "4": {
+        "name": "Lisa Thompson",
+        "text": "I've attended three different workshops now and each one has been wonderful. The community here is so welcoming, and I love having handmade pieces to use and gift."
+      }
+    }
+  },
+  "footer": {
+    "brand": "My_Space",
+    "description": "A creative workshop space where hands-on art experiences bring people together. Paint, mold, sew, and create something uniquely yours.",
+    "contact": {
+      "title": "Contact",
+      "address": {
+        "line1": "212 Creative Avenue",
+        "line2": "Casablanca, Maroc 11201"
+      },
+      "email": "hello@myspace.com",
+      "phone": "(555) 212-3456"
+    },
+    "links": {
+      "title": "Quick Links",
+      "workshops": "Workshops",
+      "schedule": "Schedule",
+      "faq": "FAQ",
+      "terms": "Terms & Conditions",
+      "privateEvents": "Private Events"
+    },
+    "copyright": "© 2026 My_Space. All rights reserved. Crafted with love and creativity."
+  }
+}

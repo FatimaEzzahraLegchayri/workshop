@@ -8,6 +8,7 @@ import { Clock, Users, Loader2 } from "lucide-react"
 import { getWorkshops } from "@/lib/service/workshopService"
 import { format } from "date-fns"
 import { BookingModal } from "@/components/BookingModal"
+import { useTranslations } from 'next-intl'
 
 interface Workshop {
   id: string
@@ -25,6 +26,7 @@ interface Workshop {
 }
 
 export function WorkshopGrid() {
+  const t = useTranslations('grid')
   const [workshops, setWorkshops] = useState<Workshop[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -141,13 +143,13 @@ export function WorkshopGrid() {
       <section className="py-20">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Choose Your Creative Adventure</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From painting to pottery, find the perfect workshop to unleash your creativity
+              {t('subtitle')}
             </p>
           </div>
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No workshops available at the moment.</p>
+            <p className="text-muted-foreground">{t('emptyState')}</p>
           </div>
         </div>
       </section>
@@ -157,9 +159,9 @@ export function WorkshopGrid() {
     <section id="workshops" className="py-20">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Choose Your Creative Adventure</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            From painting to pottery, find the perfect workshop to unleash your creativity
+            {t('subtitle')}
           </p>
         </div>
 
@@ -173,10 +175,10 @@ export function WorkshopGrid() {
                   className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 {workshop.soldOut ? (
-                  <Badge className="absolute top-4 right-4 bg-destructive text-destructive-foreground">Fully Booked</Badge>
+                  <Badge className="absolute top-4 right-4 bg-destructive text-destructive-foreground">{t('fullyBooked')}</Badge>
                 ) : workshop.seatsLeft <= 3 ? (
                   <Badge className="absolute top-4 right-4 bg-accent text-accent-foreground">
-                    Only {workshop.seatsLeft} left!
+                    {t('onlyLeft', { count: workshop.seatsLeft })}
                   </Badge>
                 ) : null}
               </div>
@@ -197,7 +199,7 @@ export function WorkshopGrid() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
-                    {workshop.soldOut ? "Full" : `${workshop.seatsLeft} seats left`}
+                    {workshop.soldOut ? t('full') : t('seatsLeft', { count: workshop.seatsLeft })}
                   </span>
                   <span className="text-2xl font-bold text-primary">{workshop.price}</span>
                 </div>
@@ -210,7 +212,7 @@ export function WorkshopGrid() {
                   variant={workshop.soldOut ? "secondary" : "default"}
                   onClick={() => handleBookNow(workshop.originalWorkshop)}
                 >
-                  {workshop.soldOut ? "Fully Booked" : "Book Now"}
+                  {workshop.soldOut ? t('fullyBooked') : t('bookNow')}
                 </Button>
               </CardFooter>
             </Card>
