@@ -150,7 +150,7 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
             <div>
               <h3 className="text-lg font-semibold mb-2">Booking Confirmed!</h3>
               <p className="text-muted-foreground">
-                Your booking has been submitted successfully. We'll send you a confirmation email shortly.
+                Your booking has been submitted successfully.
               </p>
             </div>
           </div>
@@ -181,14 +181,13 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  placeholder="Enter your email"
-                  required
+                  placeholder="Enter your email"                
                   disabled={loading}
                 />
               </div>
