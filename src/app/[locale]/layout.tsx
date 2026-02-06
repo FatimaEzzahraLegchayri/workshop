@@ -10,7 +10,7 @@ const lexend = Lexend({ subsets: ["latin"], variable: "--font-lexend" })
 const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat" })
 
 export const metadata: Metadata = {
-  title: "My_Space | Creative Workshops in Brooklyn",
+  title: "Broderie by Bel | Customized Embroidery in Montreal",
   description:
     "Join hands-on art workshops for painting, pottery, and sewing. Create, connect, and craft your story at My_Space in Brooklyn, NY.",
   generator: "v0.app",

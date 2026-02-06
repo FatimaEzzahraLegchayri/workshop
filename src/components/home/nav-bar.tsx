@@ -51,7 +51,7 @@ export function NavBar() {
             <span className="text-lg font-bold">M</span>
           </div>
           <span className="text-xl font-bold text-foreground hidden sm:inline-block">
-            My_Space
+            Broderie by Bel
           </span>
         </Link>
 

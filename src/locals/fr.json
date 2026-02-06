@@ -2,7 +2,7 @@
   "hero": {
     "title": "Créez, Connectez-vous et",
     "titleHighlight": "Créez Votre Histoire",
-    "description": "Rejoignez My_Space pour des ateliers d'art pratiques où la créativité coule librement. Peignez, modelez et cousez votre chemin vers de belles créations.",
+    "description": "Rejoignez broderie_by_bel pour des ateliers d'art pratiques où la créativité coule librement. Peignez, modelez et cousez votre chemin vers de belles créations.",
     "bookButton": "Réservez Votre Place",
     "exploreButton": "Découvrir les Ateliers",
     "imageAlt": "Participants à l'atelier créant de l'art ensemble"
@@ -63,9 +63,9 @@
   "bio": {
     "title": "Rencontrez Votre Instructrice",
     "subtitle": "Apprenez d'une artiste et éducatrice passionnée",
-    "name": "Sarah Chen",
+    "name": "Ouidad",
     "role": "Fondatrice & Instructrice Principale",
-    "description": "Sarah a fondé My_Space avec la vision de rendre l'art accessible à tous. Avec plus de 15 ans d'expérience dans les arts textiles, la céramique et les techniques mixtes, elle croit que la créativité n'est pas un talent—c'est une pratique que chacun peut développer.",
+    "description": "Ouidad a fondé Broderie by Bel avec la vision de rendre l'art accessible à tous. Avec plus de 15 ans d'expérience dans les arts textiles, la céramique et les techniques mixtes, elle croit que la créativité n'est pas un talent—c'est une pratique que chacun peut développer.",
     "degree": {
       "title": "MFA Céramique",
       "school": "Rhode Island School of Design"
@@ -122,7 +122,7 @@
     }
   },
   "footer": {
-    "brand": "My_Space",
+    "brand": "Broderie by Bel",
     "description": "Un espace d'atelier créatif où les expériences artistiques pratiques rassemblent les gens. Peignez, modelez, cousez et créez quelque chose d'uniquement vôtre.",
     "contact": {
       "title": "Contact",
@@ -130,7 +130,7 @@
         "line1": "212 Creative Avenue",
         "line2": "Casablanca, Maroc 11201"
       },
-      "email": "hello@myspace.com",
+      "email": "hello@broderiebybel.com",
       "phone": "(555) 212-3456"
     },
     "links": {
@@ -141,6 +141,6 @@
       "terms": "Conditions Générales",
       "privateEvents": "Événements Privés"
     },
-    "copyright": "© 2026 My_Space. Tous droits réservés. Créé avec amour et créativité."
+    "copyright": "© 2026 Broderie by Bel. Tous droits réservés. Créé avec amour et créativité."
   }
 }

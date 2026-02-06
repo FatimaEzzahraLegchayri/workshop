@@ -2,7 +2,7 @@
   "hero": {
     "title": "Create, Connect, and",
     "titleHighlight": "Craft Your Story",
-    "description": "Join My_Space for hands-on art workshops where creativity flows freely. Paint, mold, and sew your way to beautiful creations.",
+    "description": "Join broderie_by_bel for hands-on art workshops where creativity flows freely. Paint, mold, and sew your way to beautiful creations.",
     "bookButton": "Book Your Seat",
     "exploreButton": "Explore Workshops",
     "imageAlt": "Workshop participants creating art together"
@@ -63,9 +63,9 @@
   "bio": {
     "title": "Meet Your Instructor",
     "subtitle": "Learn from a passionate artist and educator",
-    "name": "Sarah Chen",
+    "name": "Ouidad",
     "role": "Founder & Lead Instructor",
-    "description": "Sarah founded My_Space with a vision to make art accessible to everyone. With over 15 years of experience in textile arts, ceramics, and mixed media, she believes that creativity is not a talent—it's a practice that anyone can develop.",
+    "description": "Ouidad founded Broderie by Bel with a vision to make art accessible to everyone. With over 15 years of experience in textile arts, ceramics, and mixed media, she believes that creativity is not a talent—it's a practice that anyone can develop.",
     "degree": {
       "title": "MFA Ceramics",
       "school": "Rhode Island School of Design"
@@ -122,7 +122,7 @@
     }
   },
   "footer": {
-    "brand": "My_Space",
+    "brand": "Broderie by Bel",
     "description": "A creative workshop space where hands-on art experiences bring people together. Paint, mold, sew, and create something uniquely yours.",
     "contact": {
       "title": "Contact",
@@ -130,7 +130,7 @@
         "line1": "212 Creative Avenue",
         "line2": "Casablanca, Maroc 11201"
       },
-      "email": "hello@myspace.com",
+      "email": "hello@broderiebybel.com",
       "phone": "(555) 212-3456"
     },
     "links": {
@@ -141,6 +141,6 @@
       "terms": "Terms & Conditions",
       "privateEvents": "Private Events"
     },
-    "copyright": "© 2026 My_Space. All rights reserved. Crafted with love and creativity."
+    "copyright": "© 2026 Broderie by Bel. All rights reserved. Crafted with love and creativity."
   }
 }

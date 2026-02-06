@@ -264,8 +264,8 @@ export async function confirmationEmail(emailData) {
             </div>
             <div class="content">
               <p>Dear ${emailData.toName},</p>
-              <p>Thank you for booking a workshop with My_Space! Your booking has been confirmed.</p>
-              
+              <p>Thank you for booking a workshop with Broderie by Bel! Your booking has been confirmed.</p>
+
               <div class="details">
                 <h2 style="margin-top: 0;">Workshop Details</h2>
                 <div class="detail-row">
@@ -285,7 +285,7 @@ export async function confirmationEmail(emailData) {
               <p>We look forward to seeing you at the workshop!</p>
               
               <div class="footer">
-                <p>Best regards,<br>The My_Space Team</p>
+                <p>Best regards,<br>The Broderie by Bel Team</p>
               </div>
             </div>
           </div>
@@ -299,7 +299,7 @@ Booking Confirmation
 
 Dear ${emailData.toName},
 
-Thank you for booking a workshop with My_Space! Your booking has been confirmed.
+Thank you for booking a workshop with Broderie by Bel! Your booking has been confirmed.
 
 Workshop Details:
 - Workshop: ${emailData.workshopTitle}
@@ -310,7 +310,7 @@ Workshop Details:
 We look forward to seeing you at the workshop!
 
 Best regards,
-The My_Space Team
+The Broderie by Bel Team
     `;
 
     // Brevo API endpoint for sending transactional emails
@@ -323,8 +323,8 @@ The My_Space Team
       },
       body: JSON.stringify({
         sender: {
-          name: 'My_Space',
-          email: process.env.NEXT_PUBLIC_BREVO_SENDER_EMAIL || 'noreply@myspace.com',
+          name: 'Broderie by Bel',
+          email: process.env.NEXT_PUBLIC_BREVO_SENDER_EMAIL || 'noreply@broderiebybel.com',
         },
         to: [
           {
