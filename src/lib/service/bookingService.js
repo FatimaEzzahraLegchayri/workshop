@@ -69,17 +69,17 @@ export async function newBooking(bookingData) {
     });
 
     // Send confirmation email (don't wait for it to complete)
-    confirmationEmail({
-      toEmail: booking.email,
-      toName: booking.name,
-      workshopTitle: workshop.title,
-      workshopDate: workshop.date,
-      workshopTime: workshop.startTime + (workshop.endTime ? ` - ${workshop.endTime}` : ''),
-      workshopPrice: workshop.price,
-    }).catch(error => {
-      // Email sending errors are logged but don't affect the booking
-      console.error('Email sending failed:', error);
-    });
+    // confirmationEmail({
+    //   toEmail: booking.email,
+    //   toName: booking.name,
+    //   workshopTitle: workshop.title,
+    //   workshopDate: workshop.date,
+    //   workshopTime: workshop.startTime + (workshop.endTime ? ` - ${workshop.endTime}` : ''),
+    //   workshopPrice: workshop.price,
+    // }).catch(error => {
+    //   // Email sending errors are logged but don't affect the booking
+    //   console.error('Email sending failed:', error);
+    // });
 
     // Return the created booking with id
     return {
