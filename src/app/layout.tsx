@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, getLocale } from 'next-intl/server'
 import { defaultLocale } from '@/lib/i18n-config'
 import "@/app/globals.css"
+import { Analytics } from "@vercel/analytics/react"
 
 const lexend = Lexend({ subsets: ["latin"], variable: "--font-lexend" })
 const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat" })
@@ -46,7 +47,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // Get locale from request, fallback to default
   const locale = await getLocale() || defaultLocale
   const messages = await getMessages()
 
@@ -56,7 +56,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
         </NextIntlClientProvider>
-        {/* <Analytics /> */}
+        <Analytics />
       </body>
     </html>
   )

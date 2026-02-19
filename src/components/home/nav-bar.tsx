@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,20 +18,25 @@ import { locales } from '@/lib/i18n-config'
 export function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const locale = useLocale()
+  const t = useTranslations('Navigation');
   const pathname = usePathname()
+
+  const navLinks = [
+    { name: t('atelier'), href: `/${locale}#workshops` },
+    { name: t('about'), href: `/${locale}#about` },
+    { name: t('galleries'), href: `/${locale}#galleries` },
+  ]
 
   const scrollToWorkshops = () => {
     const workshopsSection = document.getElementById('workshops')
     if (workshopsSection) {
       workshopsSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
-    setIsMenuOpen(false) // Close mobile menu if open
+    setIsMenuOpen(false)
   }
 
   const handleLocaleChange = (newLocale: string) => {
-    // Remove current locale from pathname if it exists
     const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/'
-    // Navigate to new locale using window.location for full page reload
     window.location.href = `/${newLocale}${pathWithoutLocale}`
   }
 
@@ -42,20 +47,29 @@ export function NavBar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 lg:px-8">
-        {/* Logo */}
         <Link 
           href="/" 
           className="flex items-center space-x-3 group transition-opacity hover:opacity-80"
         >
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm group-hover:shadow-md transition-shadow">
-            <span className="text-lg font-bold">M</span>
+            <span className="text-lg font-bold">L</span>
           </div>
           <span className="text-xl font-bold text-foreground hidden sm:inline-block">
-            Broderie by Bel
+            AMSA
           </span>
         </Link>
 
-        {/* Desktop Navigation - CTA and Language Switcher */}
+        <div className="hidden md:flex items-center space-x-8">
+          {navLinks.map((link) => (
+            <Link 
+              key={link.name} 
+              href={link.href}
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
         <div className="hidden md:flex items-center gap-4">
           <Select value={locale} onValueChange={handleLocaleChange}>
             <SelectTrigger className="w-[140px] h-9">
@@ -77,11 +91,10 @@ export function NavBar() {
             className="bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={scrollToWorkshops}
           >
-            Book Your Seat
+            {t('bookBtn')}
           </Button>
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="flex md:hidden items-center gap-2">
           <Select value={locale} onValueChange={handleLocaleChange}>
             <SelectTrigger className="w-[100px] h-8 text-xs">
@@ -97,13 +110,6 @@ export function NavBar() {
               ))}
             </SelectContent>
           </Select>
-          <Button 
-            size="sm"
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-            onClick={scrollToWorkshops}
-          >
-            Book
-          </Button>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="p-2 text-foreground hover:text-primary transition-colors"
@@ -118,15 +124,24 @@ export function NavBar() {
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
         <div className="md:hidden border-t border-border/40 bg-background animate-in slide-in-from-top-2">
           <div className="container mx-auto px-4 py-4 space-y-2">
+          {navLinks.map((link) => (
+              <Link 
+                key={link.name} 
+                href={link.href}
+                className=" flex items-center justify-center text-lg font-medium py-2 border-b border-border/10"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.name}
+              </Link>
+            ))}
             <Button 
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={scrollToWorkshops}
             >
-              Book Your Seat
+              {t('bookBtn')}
             </Button>
           </div>
         </div>

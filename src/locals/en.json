@@ -1,8 +1,14 @@
 {
+  "Navigation": {
+    "atelier": "Workshops",
+    "about": "About",
+    "galleries": "Galleries",
+    "bookBtn": "Book"
+  },
   "hero": {
     "title": "Create, Connect, and",
     "titleHighlight": "Craft Your Story",
-    "description": "Join broderie_by_bel for hands-on art workshops where creativity flows freely. Paint, mold, and sew your way to beautiful creations.",
+    "description": "Join Lamsa Création for hands-on art workshops where creativity flows freely. Paint, sculpt, and sew your way to beautiful creations.",
     "bookButton": "Book Your Seat",
     "exploreButton": "Explore Workshops",
     "imageAlt": "Workshop participants creating art together"
@@ -17,7 +23,7 @@
   },
   "grid": {
     "title": "Choose Your Creative Adventure",
-    "subtitle": "From painting to pottery, find the perfect workshop to unleash your creativity",
+    "subtitle": "From embroidery to pottery, find the perfect workshop to unleash your creativity",
     "emptyState": "No workshops available at the moment.",
     "fullyBooked": "Fully Booked",
     "onlyLeft": "Only {count} left!",
@@ -100,23 +106,23 @@
     "subtitle": "Join hundreds of happy makers who've discovered their creative side",
     "items": {
       "0": {
-        "name": "Emma Rodriguez",
+        "name": "Asmae",
         "text": "I made my first pottery bowl and I'm obsessed! Sarah's patient teaching style made something I thought was impossible feel totally doable. Can't wait for the next class!"
       },
       "1": {
-        "name": "Marcus Johnson",
+        "name": "Mouna",
         "text": "The tote bag I painted is my favorite accessory now! Everyone asks where I got it. Such a fun, relaxing experience. Perfect date activity!"
       },
       "2": {
-        "name": "Priya Patel",
+        "name": "Fatima",
         "text": "As someone who never thought they were 'artistic,' this workshop changed my perspective. The supportive environment and clear instruction helped me create something I'm genuinely proud of."
       },
       "3": {
-        "name": "James Chen",
+        "name": "Yahya",
         "text": "Came with my sister and had an amazing time! The sewing workshop taught me practical skills while being incredibly fun. Sarah is a fantastic teacher."
       },
       "4": {
-        "name": "Lisa Thompson",
+        "name": "Yasmine",
         "text": "I've attended three different workshops now and each one has been wonderful. The community here is so welcoming, and I love having handmade pieces to use and gift."
       }
     }
@@ -142,5 +148,20 @@
       "privateEvents": "Private Events"
     },
     "copyright": "© 2026 Broderie by Bel. All rights reserved. Crafted with love and creativity."
+  },
+  "bookingModal": {
+    "title": "Book Workshop",
+    "description": "Complete your booking for {workshop}",
+    "confirmBooking": "Confirm Booking",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "bookingConfirmed": "Booking Confirmed!",
+    "bookingSubmitted": "Your booking has been submitted successfully.",
+    "name": "Full Name",
+    "namePlaceholder": "Enter your full name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Enter your phone number"
   }
 }

@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select'
 import { addWorkshop, updateWorkshop } from '@/lib/service/workshopService'
 import { Loader2 } from 'lucide-react'
+import { cloudinaryConfig } from '@/lib/cloudinaryConfig'
 
 interface Workshop {
   id: string
@@ -66,7 +67,6 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
   const [imageFile, setImageFile] = useState<File | null>(null)
   const isEditMode = !!workshop
 
-  // Populate form when editing
   useEffect(() => {
     if (workshop && open) {
       setFormData({
@@ -84,7 +84,6 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
       setImagePreview(workshop.image || null)
       setImageFile(null)
     } else if (!workshop && open) {
-      // Reset form when creating new workshop
       setFormData(initialFormData)
       setImagePreview(null)
       setImageFile(null)
@@ -94,21 +93,19 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         setError('Please select a valid image file')
         return
       }
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setError('Image size must be less than 5MB')
         return
       }
+  
       setImageFile(file)
-      setFormData((prev) => ({ ...prev, image: '' })) // Clear URL if file is selected
+      setFormData((prev) => ({ ...prev, image: '' }))
       setError('')
       
-      // Create preview
       const reader = new FileReader()
       reader.onloadend = () => {
         setImagePreview(reader.result as string)
@@ -121,7 +118,7 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
     setFormData((prev) => ({ ...prev, image: url }))
     if (url) {
       setImagePreview(url)
-      setImageFile(null) // Clear file if URL is entered
+      setImageFile(null)
     } else {
       setImagePreview(null)
     }
@@ -133,64 +130,57 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
     setFormData((prev) => ({ ...prev, image: '' }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+ 
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      // Convert image file to base64 if a new file was selected
-      let imageUrl = formData.image
-      if (imageFile) {
-        const reader = new FileReader()
-        imageUrl = await new Promise<string>((resolve, reject) => {
-          reader.onloadend = () => resolve(reader.result as string)
-          reader.onerror = reject
-          reader.readAsDataURL(imageFile)
-        })
+  try {
+    let finalImageUrl = formData.image;
+
+    if (imageFile) {
+      try {
+        const uploadedUrl = await cloudinaryConfig(imageFile, "workshops-covers");
+        if (!uploadedUrl) throw new Error("Cloudinary returned no URL");
+        finalImageUrl = uploadedUrl; 
+      } catch (uploadErr) {
+        throw new Error("Image upload failed. Please try a different image.");
       }
-
-      const workshopData = {
-        title: formData.title,
-        description: formData.description,
-        date: formData.date,
-        startTime: formData.startTime,
-        endTime: formData.endTime || undefined,
-        category: formData.category,
-        capacity: parseInt(formData.capacity),
-        price: parseFloat(formData.price),
-        status: formData.status,
-        image: imageUrl || undefined,
-      }
-
-      if (isEditMode && workshop) {
-        await updateWorkshop(workshop.id, workshopData)
-      } else {
-        await addWorkshop(workshopData)
-      }
-
-      // Reset form
-      setFormData(initialFormData)
-      setImagePreview(null)
-      setImageFile(null)
-
-      // Close modal and refresh list
-      onOpenChange(false)
-      if (onSuccess) {
-        onSuccess()
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isEditMode
-          ? 'Failed to update workshop'
-          : 'Failed to add workshop'
-      )
-    } finally {
-      setLoading(false)
     }
+
+    const workshopData = {
+      title: formData.title,
+      description: formData.description,
+      date: formData.date,
+      startTime: formData.startTime,
+      endTime: formData.endTime || undefined,
+      category: formData.category,
+      capacity: parseInt(formData.capacity),
+      price: parseFloat(formData.price),
+      status: formData.status,
+      image: finalImageUrl || null,
+    };
+
+    if (isEditMode && workshop) {
+      await updateWorkshop(workshop.id, workshopData);
+    } else {
+      await addWorkshop(workshopData);
+    }
+
+    setFormData(initialFormData);
+    setImagePreview(null);
+    setImageFile(null);
+    onOpenChange(false);
+    if (onSuccess) onSuccess();
+
+  } catch (err: any) {
+    console.error("Submit Error:", err);
+    setError(err.message || "An unexpected error occurred.");
+  } finally {
+    setLoading(false);
   }
+};
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -198,17 +188,19 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{isEditMode ? 'Edit Workshop' : 'Add New Workshop'}</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg">
+        <DialogHeader className="text-left">
+          <DialogTitle className="text-xl md:text-2xl">
+            {isEditMode ? 'Edit Workshop' : 'Add New Workshop'}
+          </DialogTitle>
+          <DialogDescription className="text-sm">
             {isEditMode
               ? 'Update the workshop details below'
               : 'Fill in the details to create a new workshop'}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 py-2">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title">Title *</Label>
@@ -219,6 +211,7 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
                 placeholder="Workshop title"
                 required
                 disabled={loading}
+                className="text-base"
               />
             </div>
 
@@ -231,6 +224,7 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
                 placeholder="e.g., Painting, Pottery"
                 required
                 disabled={loading}
+                className="text-base"
               />
             </div>
           </div>
@@ -245,57 +239,46 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
               rows={3}
               required
               disabled={loading}
+              className="text-base"
             />
           </div>
 
           <div className="space-y-2">
-            {/* <Label htmlFor="image">Image (Optional)</Label>
-            <div className="space-y-2">
+            <div className="relative">
               <Input
-                id="image-url"
-                type="url"
-                value={formData.image}
-                onChange={(e) => handleImageUrlChange(e.target.value)}
-                placeholder="Or enter image URL"
-                disabled={loading || !!imageFile}
-                className="mb-2"
-              /> */}
-              <div className="relative">
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  disabled={loading}
-                  className="cursor-pointer"
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={loading}
+                className="cursor-pointer text-sm"
+              />
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+                Upload an image file (max 5MB)
+              </p>
+            </div>
+            {imagePreview && (
+              <div className="relative mt-2">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-full h-32 sm:h-48 object-cover rounded-lg border"
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Upload an image file (max 5MB)
-                </p>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleRemoveImage}
+                  disabled={loading}
+                  className="absolute top-2 right-2 h-8 px-2"
+                >
+                  Remove
+                </Button>
               </div>
-              {imagePreview && (
-                <div className="relative mt-2">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-48 object-cover rounded-lg border"
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    onClick={handleRemoveImage}
-                    disabled={loading}
-                    className="absolute top-2 right-2"
-                  >
-                    Remove
-                  </Button>
-                </div>
-              )}
-            {/* </div> */}
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="date">Date *</Label>
               <Input
@@ -305,6 +288,7 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
                 onChange={(e) => handleChange('date', e.target.value)}
                 required
                 disabled={loading}
+                className="text-base"
               />
             </div>
 
@@ -315,7 +299,7 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
                 onValueChange={(value) => handleChange('status', value)}
                 disabled={loading}
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-base">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -328,7 +312,7 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="startTime">Start Time *</Label>
               <Input
@@ -338,6 +322,7 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
                 onChange={(e) => handleChange('startTime', e.target.value)}
                 required
                 disabled={loading}
+                className="text-base"
               />
             </div>
 
@@ -349,14 +334,13 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
                 value={formData.endTime}
                 onChange={(e) => handleChange('endTime', e.target.value)}
                 disabled={loading}
+                className="text-base"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-
-            <div className="space-y-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="space-y-2 col-span-1">
               <Label htmlFor="capacity">Capacity *</Label>
               <Input
                 id="capacity"
@@ -367,11 +351,12 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
                 min="1"
                 required
                 disabled={loading}
+                className="text-base"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="price">Price ($) *</Label>
+            <div className="space-y-2 col-span-1">
+              <Label htmlFor="price">Price *</Label>
               <Input
                 id="price"
                 type="number"
@@ -382,26 +367,28 @@ export function WorkshopModal({ open, onOpenChange, onSuccess, workshop }: Works
                 min="0"
                 required
                 disabled={loading}
+                className="text-base"
               />
             </div>
           </div>
 
           {error && (
-            <div className="bg-destructive/10 text-destructive border border-destructive/20 px-4 py-3 rounded-md text-sm">
+            <div className="bg-destructive/10 text-destructive border border-destructive/20 px-3 py-2 rounded-md text-xs sm:text-sm">
               {error}
             </div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={loading}
+              className="w-full sm:w-auto"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="w-full sm:w-auto">
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

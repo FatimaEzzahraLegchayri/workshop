@@ -26,7 +26,7 @@ interface Workshop {
 interface ScheduleItem {
   date: string
   day: string
-  dateKey: string // Original date string for sorting
+  dateKey: string
   workshops: {
     time: string
     title: string
@@ -46,7 +46,6 @@ export function WorkshopSchedule() {
       try {
         setLoading(true)
         const data = await getWorkshops()
-        // Filter to only show published workshops
         const publishedWorkshops = (data as Workshop[]).filter(
           (w) => w.status === 'PUBLISHED'
         )
@@ -62,7 +61,6 @@ export function WorkshopSchedule() {
     fetchWorkshops()
   }, [])
 
-  // Format time from "10:00" to "10:00 AM"
   const formatTime = (timeString: string) => {
     if (!timeString) return ''
     const [hours, minutes] = timeString.split(':')
@@ -72,7 +70,6 @@ export function WorkshopSchedule() {
     return `${displayHour}:${minutes} ${ampm}`
   }
 
-  // Format date to "Jan 18" format
   const formatDateShort = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -82,7 +79,6 @@ export function WorkshopSchedule() {
     }
   }
 
-  // Get day abbreviation (e.g., "SAT")
   const getDayAbbreviation = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -92,7 +88,6 @@ export function WorkshopSchedule() {
     }
   }
 
-  // Get status text based on seats left
   const getStatusText = (seatsLeft: number, capacity: number) => {
     if (seatsLeft <= 0) {
       return t('fullyBooked')
@@ -103,7 +98,6 @@ export function WorkshopSchedule() {
     }
   }
 
-  // Group workshops by date and transform to schedule items
   const scheduleItems: ScheduleItem[] = workshops.reduce((acc, workshop) => {
     const seatsLeft = workshop.capacity - (workshop.bookedSeats || 0)
     const available = seatsLeft > 0 && workshop.status !== 'Fully Booked'
@@ -122,7 +116,6 @@ export function WorkshopSchedule() {
 
     if (existingItem) {
       existingItem.workshops.push(workshopItem)
-      // Sort workshops by time within each date
       existingItem.workshops.sort((a, b) => {
         const timeA = a.time
         const timeB = b.time
@@ -132,7 +125,7 @@ export function WorkshopSchedule() {
       acc.push({
         date: formatDateShort(dateKey),
         day: getDayAbbreviation(dateKey),
-        dateKey: dateKey, // Store original date for sorting
+        dateKey: dateKey,
         workshops: [workshopItem],
       })
     }
@@ -140,7 +133,6 @@ export function WorkshopSchedule() {
     return acc
   }, [] as ScheduleItem[])
 
-  // Sort schedule items by date (using original dateKey)
   scheduleItems.sort((a, b) => {
     try {
       const dateA = new Date(a.dateKey)
@@ -177,11 +169,11 @@ export function WorkshopSchedule() {
 
   if (scheduleItems.length === 0) {
     return (
-      <section className="py-20 bg-muted/30">
+      <section id="workshop-schedule" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-forest-green">{t('title')}</h2>
+            <p className="text-xl text-soft-pink max-w-2xl mx-auto">
               {t('subtitle')}
             </p>
           </div>
@@ -193,11 +185,11 @@ export function WorkshopSchedule() {
     )
   }
   return (
-    <section className="py-20 bg-muted/30">
+    <section id="workshop-schedule" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-forest-green">{t('title')}</h2>
+          <p className="text-xl max-w-2xl mx-auto text-soft-pink">
             {t('subtitle')}
           </p>
         </div>
@@ -206,9 +198,9 @@ export function WorkshopSchedule() {
           {scheduleItems.map((item, idx) => (
             <Card key={`${item.date}-${idx}`} className="p-6 hover:shadow-lg transition-shadow">
               <div className="flex items-center gap-3 mb-4 pb-4 border-b">
-                <Calendar className="h-5 w-5 text-primary" />
+                <Calendar className="h-5 w-5 text-primary text-khaki" />
                 <div>
-                  <div className="text-2xl font-bold">{item.date}</div>
+                  <div className="text-2xl font-bold text-indian-pink">{item.date}</div>
                   <div className="text-sm text-muted-foreground">{item.day}</div>
                 </div>
               </div>

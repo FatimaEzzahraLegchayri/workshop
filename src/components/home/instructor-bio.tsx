@@ -8,19 +8,19 @@ export function InstructorBio() {
   const t = useTranslations('bio')
 
   return (
-    <section className="py-20">
+    <section id="about" className="py-20">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
-            <p className="text-xl text-muted-foreground">{t('subtitle')}</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-forest-green">{t('title')}</h2>
+            <p className="text-xl text-soft-pink">{t('subtitle')}</p>
           </div>
 
           <Card className="overflow-hidden">
             <div className="grid md:grid-cols-5 gap-8 p-8">
               <div className="md:col-span-2">
                 <div className="aspect-square rounded-xl overflow-hidden mb-4">
-                  <img src="/friendly-female-artist-instructor-smiling-in-creat.jpg" alt={t('name')} className="w-full h-full object-cover" />
+                  <img src="/gallery-13.jpg" alt={t('name')} className="w-full h-full object-cover" />
                 </div>
                 <div className="text-center md:text-left">
                   <h3 className="text-2xl font-bold">{t('name')}</h3>

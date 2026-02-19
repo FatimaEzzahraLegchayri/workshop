@@ -10,6 +10,8 @@ import { WorkshopModal } from '@/components/workShop/WorkshopModal'
 import { DeleteConfirmation } from '@/components/workShop/DeleteConfirmation'
 import { Calendar, Clock, Users, DollarSign, Loader2, Plus, Pencil, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
+import { PaginationHelper } from '@/components/admin/pagination-helper'
+
 
 interface Workshop {
   id: string
@@ -39,6 +41,9 @@ export default function WorkshopsPage() {
   const [workshopToDelete, setWorkshopToDelete] = useState<Workshop | null>(null)
   const [deleting, setDeleting] = useState(false)
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 12
+
   const fetchWorkshops = async () => {
     try {
       setLoading(true)
@@ -55,6 +60,10 @@ export default function WorkshopsPage() {
   useEffect(() => {
     fetchWorkshops()
   }, [])
+
+  const totalPages = Math.ceil(workshops.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const currentWorkshops = workshops.slice(startIndex, startIndex + itemsPerPage)
 
   const formatDate = (dateString: string) => {
     try {
@@ -97,7 +106,7 @@ export default function WorkshopsPage() {
       await deleteWorkshop(workshopToDelete.id)
       setIsDeleteDialogOpen(false)
       setWorkshopToDelete(null)
-      fetchWorkshops() // Refresh the list
+      fetchWorkshops() 
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete workshop')
       setIsDeleteDialogOpen(false)
@@ -109,12 +118,12 @@ export default function WorkshopsPage() {
   return (
     <div className="flex min-h-screen">
       <SideBar />
-      <main className="flex-1 p-6 md:p-8">
+      <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Workshops</h1>
-              <p className="text-muted-foreground">
+              <h1 className="text-2xl md:text-3xl font-bold mb-2">Workshops</h1>
+              <p className="text-muted-foreground text-sm md:text-base">
                 Manage and view all workshops
               </p>
             </div>
@@ -124,6 +133,7 @@ export default function WorkshopsPage() {
                 setIsModalOpen(true)
               }}
               size="lg"
+              className="w-full sm:w-auto"
             >
               <Plus className="mr-2 h-5 w-5" />
               Add Workshop
@@ -137,7 +147,7 @@ export default function WorkshopsPage() {
           )}
 
           {error && (
-            <div className="bg-destructive/10 text-destructive p-4 rounded-lg mb-6">
+            <div className="bg-destructive/10 text-destructive p-4 rounded-lg mb-6 text-sm">
               {error}
             </div>
           )}
@@ -149,11 +159,12 @@ export default function WorkshopsPage() {
           )}
 
           {!loading && !error && workshops.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {workshops.map((workshop) => (
-                <Card key={workshop.id} className="hover:shadow-lg transition-shadow">
+            <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {currentWorkshops.map((workshop) => (
+                <Card key={workshop.id} className="hover:shadow-lg transition-shadow overflow-hidden">
                   {workshop.image && (
-                    <div className="w-full h-48 overflow-hidden rounded-t-lg">
+                    <div className="w-full h-48 overflow-hidden">
                       <img
                         src={workshop.image}
                         alt={workshop.title}
@@ -161,10 +172,12 @@ export default function WorkshopsPage() {
                       />
                     </div>
                   )}
-                  <CardHeader>
-                    <div className="flex items-start justify-between mb-2">
-                      <CardTitle className="text-xl">{workshop.title}</CardTitle>
-                      <Badge variant={getStatusBadgeVariant(workshop.status)}>
+                  <CardHeader className="p-4 md:p-6">
+                    <div className="flex items-start justify-between mb-2 gap-2">
+                      <CardTitle className="text-lg md:text-xl leading-tight">
+                        {workshop.title}
+                      </CardTitle>
+                      <Badge variant={getStatusBadgeVariant(workshop.status)} className="shrink-0">
                         {workshop.status}
                       </Badge>
                     </div>
@@ -173,40 +186,40 @@ export default function WorkshopsPage() {
                     </p>
                   </CardHeader>
 
-                  <CardContent className="space-y-4">
+                  <CardContent className="p-4 md:p-6 pt-0 md:pt-0 space-y-4">
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
+                        <Calendar className="h-4 w-4 shrink-0" />
                         <span>{formatDate(workshop.date)}</span>
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Clock className="h-4 w-4" />
+                        <Clock className="h-4 w-4 shrink-0" />
                         <span>
                           {workshop.startTime}
                           {workshop.endTime && ` - ${workshop.endTime}`}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Users className="h-4 w-4" />
+                      <div className="flex flex-wrap items-center gap-2 text-muted-foreground">
+                        <Users className="h-4 w-4 shrink-0" />
                         <span>
                           {workshop.bookedSeats}/{workshop.capacity} booked
                         </span>
-                        <span className="text-xs text-primary">
+                        <span className="text-xs text-primary font-medium">
                           ({availableSeats(workshop.capacity, workshop.bookedSeats)} available)
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <DollarSign className="h-4 w-4 text-primary" />
+                        <DollarSign className="h-4 w-4 text-primary shrink-0" />
                         <span className="font-semibold"> {workshop.price} DH</span>
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">
+                    <div className="pt-4 border-t">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs text-muted-foreground truncate">
                           Category: {workshop.category}
                         </span>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 shrink-0">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -214,17 +227,19 @@ export default function WorkshopsPage() {
                               setEditingWorkshop(workshop)
                               setIsModalOpen(true)
                             }}
-                            className="h-8 w-8 p-0"
+                            className="h-9 w-9 p-0"
                           >
                             <Pencil className="h-4 w-4" />
+                            <span className="sr-only">Edit</span>
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteClick(workshop)}
-                            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            className="h-9 w-9 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             <Trash2 className="h-4 w-4" />
+                            <span className="sr-only">Delete</span>
                           </Button>
                         </div>
                       </div>
@@ -233,6 +248,16 @@ export default function WorkshopsPage() {
                 </Card>
               ))}
             </div>
+            
+            <PaginationHelper 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(page) => {
+                  setCurrentPage(page);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            </>
           )}
         </div>
       </main>

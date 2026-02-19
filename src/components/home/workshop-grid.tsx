@@ -37,7 +37,6 @@ export function WorkshopGrid() {
     try {
       setLoading(true)
       const data = await getWorkshops()
-      // Filter to only show published workshops
       const publishedWorkshops = (data as Workshop[]).filter(
         (w) => w.status === 'PUBLISHED'
       )
@@ -54,7 +53,6 @@ export function WorkshopGrid() {
     fetchWorkshops()
   }, [])
 
-  // Format time from "10:00" to "10:00 AM"
   const formatTime = (timeString: string) => {
     if (!timeString) return ''
     const [hours, minutes] = timeString.split(':')
@@ -64,7 +62,6 @@ export function WorkshopGrid() {
     return `${displayHour}:${minutes} ${ampm}`
   }
 
-  // Format date from "2026-01-18" to "Saturday, Jan 18"
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -74,7 +71,6 @@ export function WorkshopGrid() {
     }
   }
 
-  // Calculate time range
   const formatTimeRange = (startTime: string, endTime?: string) => {
     const start = formatTime(startTime)
     if (endTime) {
@@ -84,7 +80,6 @@ export function WorkshopGrid() {
     return start
   }
 
-  // Transform workshop data to match component expectations
   const transformedWorkshops = workshops.map((workshop) => {
     const seatsLeft = workshop.capacity - (workshop.bookedSeats || 0)
     const soldOut = seatsLeft <= 0 || workshop.status === 'fully booked'
@@ -99,7 +94,6 @@ export function WorkshopGrid() {
       image: workshop.image || "/placeholder.svg",
       description: workshop.description,
       soldOut,
-      // Keep original data for booking modal
       originalWorkshop: workshop,
     }
   })
@@ -110,7 +104,6 @@ export function WorkshopGrid() {
   }
 
   const handleBookingSuccess = () => {
-    // Refresh workshops to update seat counts
     fetchWorkshops()
   }
 
@@ -159,8 +152,8 @@ export function WorkshopGrid() {
     <section id="workshops" className="py-20">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-forest-green">{t('title')}</h2>
+          <p className="text-xl text-soft-pink max-w-2xl mx-auto">
             {t('subtitle')}
           </p>
         </div>
@@ -197,7 +190,7 @@ export function WorkshopGrid() {
               <CardContent>
                 <p className="text-muted-foreground mb-4">{workshop.description}</p>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2 text-forest-green">
                     <Users className="h-4 w-4 text-primary" />
                     {workshop.soldOut ? t('full') : t('seatsLeft', { count: workshop.seatsLeft })}
                   </span>
@@ -229,7 +222,7 @@ export function WorkshopGrid() {
             ? {
                 id: selectedWorkshop.id,
                 title: selectedWorkshop.title,
-                date: selectedWorkshop.date, // Keep original date format for display
+                date: selectedWorkshop.date,
                 startTime: selectedWorkshop.startTime,
                 endTime: selectedWorkshop.endTime,
                 price: selectedWorkshop.price,

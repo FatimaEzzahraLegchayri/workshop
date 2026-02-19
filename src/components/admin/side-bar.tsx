@@ -10,18 +10,18 @@ import { ConfirmLogout } from './confirm-logout'
 
 const navItems = [
   {
-    title: 'Workshops',
-    href: '/dashboard/workshops',
-    icon: Palette,
-  },
-  {
     title: 'Booking',
-    href: '/dashboard/booking',
+    href: '/booking',
     icon: Calendar,
   },
   {
+    title: 'Workshops',
+    href: '/workshops',
+    icon: Palette,
+  },
+  {
     title: 'Profile',
-    href: '/dashboard/profile',
+    href: '/profile',
     icon: User,
   },
 ]
@@ -42,7 +42,7 @@ export function SideBar() {
 
   return (
     <>
-      <aside className="w-64 min-h-screen bg-sidebar border-r border-sidebar-border p-6 flex flex-col">
+      <aside className="hidden md:flex w-64 min-h-screen bg-sidebar border-r border-sidebar-border p-6 flex-col sticky top-0">
         <div className="space-y-2 flex-1">
           {navItems.map((item) => {
             const Icon = item.icon
@@ -80,6 +80,36 @@ export function SideBar() {
           </button>
         </div>
       </aside>
+
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-sidebar border-t border-sidebar-border px-4 py-2 flex justify-around items-center z-50">
+        {navItems.map((item) => {
+          const Icon = item.icon
+          const isActive = pathname === item.href
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex flex-col items-center gap-1 p-2 rounded-lg text-[10px] font-medium transition-colors',
+                isActive
+                  ? 'text-sidebar-accent-foreground'
+                  : 'text-sidebar-foreground opacity-70'
+              )}
+            >
+              <Icon className="h-5 w-5" />
+              <span>{item.title}</span>
+            </Link>
+          );
+        })}
+        <button
+          onClick={() => setShowLogoutDialog(true)}
+          className="flex flex-col items-center gap-1 p-2 text-destructive opacity-70"
+        >
+          <LogOut className="h-5 w-5" />
+          <span className="text-[10px]">Logout</span>
+        </button>
+      </nav>
 
       <ConfirmLogout
         open={showLogoutDialog}

@@ -1,8 +1,14 @@
 {
+  "Navigation": {
+    "atelier": "Atelier",
+    "about": "À propos",
+    "galleries": "Galleries",
+    "bookBtn": "Réserver"
+  },
   "hero": {
-    "title": "Créez, Connectez-vous et",
-    "titleHighlight": "Créez Votre Histoire",
-    "description": "Rejoignez broderie_by_bel pour des ateliers d'art pratiques où la créativité coule librement. Peignez, modelez et cousez votre chemin vers de belles créations.",
+    "title": "Connectez-vous",
+    "titleHighlight": "Créez votre histoire",
+    "description": "Rejoignez Lamsa création pour des ateliers d’art pratiques où la créativité coule librement. Peignez, modelez et cousez votre chemin vers de belles créations.",
     "bookButton": "Réservez Votre Place",
     "exploreButton": "Découvrir les Ateliers",
     "imageAlt": "Participants à l'atelier créant de l'art ensemble"
@@ -17,7 +23,7 @@
   },
   "grid": {
     "title": "Choisissez Votre Aventure Créative",
-    "subtitle": "De la peinture à la poterie, trouvez l'atelier parfait pour libérer votre créativité",
+    "subtitle": "De la broderie à la poterie, trouver l’atelier parfait pour libérer votre créativité",
     "emptyState": "Aucun atelier disponible pour le moment.",
     "fullyBooked": "Complet",
     "onlyLeft": "Plus que {count} places !",
@@ -100,23 +106,23 @@
     "subtitle": "Rejoignez des centaines de créateurs heureux qui ont découvert leur côté créatif",
     "items": {
       "0": {
-        "name": "Emma Rodriguez",
+        "name": "Asmae",
         "text": "J'ai créé mon premier bol en poterie et j'en suis obsédée ! Le style d'enseignement patient de Sarah a rendu quelque chose que je pensais impossible totalement réalisable. J'ai hâte au prochain cours !"
       },
       "1": {
-        "name": "Marcus Johnson",
+        "name": "Mouna",
         "text": "Le tote bag que j'ai peint est maintenant mon accessoire préféré ! Tout le monde me demande où je l'ai trouvé. Une expérience si amusante et relaxante. Activité de couple parfaite !"
       },
       "2": {
-        "name": "Priya Patel",
+        "name": "Fatima",
         "text": "En tant que personne qui n'a jamais pensé être 'artiste', cet atelier a changé ma perspective. L'environnement bienveillant et les instructions claires m'ont aidé à créer quelque chose dont je suis vraiment fier."
       },
       "3": {
-        "name": "James Chen",
+        "name": "Yahya",
         "text": "Je suis venu avec ma sœur et nous avons passé un moment incroyable ! L'atelier de couture m'a enseigné des compétences pratiques tout en étant incroyablement amusant. Sarah est une enseignante fantastique."
       },
       "4": {
-        "name": "Lisa Thompson",
+        "name": "Yasmine",
         "text": "J'ai assisté à trois ateliers différents maintenant et chacun a été merveilleux. La communauté ici est si accueillante, et j'adore avoir des pièces faites à la main à utiliser et à offrir."
       }
     }
@@ -142,5 +148,20 @@
       "privateEvents": "Événements Privés"
     },
     "copyright": "© 2026 Broderie by Bel. Tous droits réservés. Créé avec amour et créativité."
+  },
+  "bookingModal": {
+    "title": "Réserver un Atelier",
+    "description": "Complétez votre réservation pour {workshop}",
+    "confirmBooking": "Confirmer la Réservation",
+    "cancel": "Annuler",
+    "processing": "En traitement...",
+    "bookingConfirmed": "Réservation Confirmée !",
+    "bookingSubmitted": "Votre réservation a été soumise avec succès.",
+    "name": "Nom Complet",
+    "namePlaceholder": "Entrez votre nom complet",
+    "email": "Email",
+    "emailPlaceholder": "Entrez votre email",
+    "phone": "Numéro de Téléphone",
+    "phonePlaceholder": "Entrez votre numéro de téléphone"
   }
 }

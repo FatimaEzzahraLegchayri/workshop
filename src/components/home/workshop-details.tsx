@@ -92,16 +92,16 @@ export function WorkshopDetails() {
     <section className="py-20 bg-secondary/10">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">{t('subtitle')}</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-forest-green">{t('title')}</h2>
+          <p className="text-xl text-soft-pink max-w-2xl mx-auto">{t('subtitle')}</p>
         </div>
 
         <div className="space-y-8 max-w-5xl mx-auto">
           {workshopTypes.map((workshop, idx) => (
             <Card key={idx} className="overflow-hidden">
-              <CardHeader className="bg-primary/5">
+              <CardHeader className="bg-soft-pink/5">
                 <CardTitle className="flex items-center gap-3 text-2xl">
-                  <workshop.icon className="h-6 w-6 text-primary" />
+                  <workshop.icon className="h-6 w-6 text-forest-green" />
                   {workshop.title}
                 </CardTitle>
               </CardHeader>

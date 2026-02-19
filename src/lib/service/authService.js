@@ -62,7 +62,6 @@ export async function signup(name, email, password, role = 'admin') {
       uid: user.uid,
       name: name,
       email: user.email,
-      // displayName: user.displayName,
       emailVerified: user.emailVerified,
       role: role,
     };

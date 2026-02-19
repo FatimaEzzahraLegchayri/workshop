@@ -1,35 +1,16 @@
 import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/config';
+import { ensureAdmin } from '../helper';
 
 
 export async function updateProfile(profileData) {
   try {
-    // Check if user is authenticated
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('User must be authenticated to update profile');
-    }
-
-    // Check if user has admin role
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (!userDocSnap.exists()) {
-      throw new Error('User not found. Access denied.');
-    }
-
-    const userData = userDocSnap.data();
-    const userRole = userData.role;
-
-    if (userRole !== 'admin') {
-      throw new Error('Access denied. Admin role required.');
-    }
+    await ensureAdmin()
 
     const updateData = {};
     let passwordUpdated = false;
 
-    // Update name in Firestore if provided
     if (profileData.name !== undefined && profileData.name !== null) {
       if (typeof profileData.name !== 'string' || profileData.name.trim() === '') {
         throw new Error('Name cannot be empty');
@@ -38,7 +19,6 @@ export async function updateProfile(profileData) {
       updateData.updatedAt = new Date().toISOString();
     }
 
-    // Update password if provided
     if (profileData.password !== undefined && profileData.password !== null) {
       if (!profileData.currentPassword) {
         throw new Error('Current password is required to update password');
@@ -48,21 +28,17 @@ export async function updateProfile(profileData) {
         throw new Error('Password must be at least 6 characters long');
       }
 
-      // Re-authenticate user with current password
       const credential = EmailAuthProvider.credential(user.email, profileData.currentPassword);
       await reauthenticateWithCredential(user, credential);
 
-      // Update password
       await updatePassword(user, profileData.password);
       passwordUpdated = true;
     }
 
-    // Update Firestore if there are changes
     if (Object.keys(updateData).length > 0) {
       await updateDoc(userDocRef, updateData);
     }
 
-    // Get updated user data
     const updatedDocSnap = await getDoc(userDocRef);
     const updatedUserData = updatedDocSnap.data();
 
@@ -75,7 +51,6 @@ export async function updateProfile(profileData) {
       ...updatedUserData,
     };
   } catch (error) {
-    // Re-throw validation errors
     if (error.message.includes('Access denied') ||
         error.message.includes('User must be authenticated') ||
         error.message.includes('User not found') ||
@@ -85,7 +60,6 @@ export async function updateProfile(profileData) {
       throw error;
     }
 
-    // Handle Firebase Auth errors
     if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
       throw new Error('Current password is incorrect');
     }
@@ -100,28 +74,8 @@ export async function updateProfile(profileData) {
 
 export async function getProfile() {
   try {
-    // Check if user is authenticated
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('User must be authenticated to view profile');
-    }
+    await ensureAdmin()
 
-    // Check if user has admin role
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (!userDocSnap.exists()) {
-      throw new Error('User not found. Access denied.');
-    }
-
-    const userData = userDocSnap.data();
-    const userRole = userData.role;
-
-    if (userRole !== 'admin') {
-      throw new Error('Access denied. Admin role required.');
-    }
-
-    // Return user profile information
     return {
       uid: user.uid,
       email: user.email,
@@ -133,7 +87,6 @@ export async function getProfile() {
       ...userData,
     };
   } catch (error) {
-    // Re-throw validation errors
     if (error.message.includes('Access denied') ||
         error.message.includes('User must be authenticated') ||
         error.message.includes('User not found')) {

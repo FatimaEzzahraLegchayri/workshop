@@ -33,7 +33,6 @@ export function UpdateProfile({ open, onOpenChange, onSuccess, currentName }: Up
   const [formData, setFormData] = useState(initialFormData)
   const [updatePassword, setUpdatePassword] = useState(false)
 
-  // Reset form when modal opens/closes
   useEffect(() => {
     if (open) {
       setFormData({
@@ -52,7 +51,7 @@ export function UpdateProfile({ open, onOpenChange, onSuccess, currentName }: Up
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    setError('') // Clear error when user starts typing
+    setError('')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,12 +66,10 @@ export function UpdateProfile({ open, onOpenChange, onSuccess, currentName }: Up
         currentPassword?: string
       } = {}
 
-      // Add name if provided
       if (formData.name.trim()) {
         updateData.name = formData.name.trim()
       }
 
-      // Add password fields if user wants to update password
       if (updatePassword) {
         if (!formData.currentPassword) {
           setError('Current password is required to update password')
@@ -88,7 +85,6 @@ export function UpdateProfile({ open, onOpenChange, onSuccess, currentName }: Up
         updateData.currentPassword = formData.currentPassword
       }
 
-      // Check if there's anything to update
       if (!updateData.name && !updateData.password) {
         setError('Please provide at least one field to update')
         setLoading(false)
@@ -97,11 +93,9 @@ export function UpdateProfile({ open, onOpenChange, onSuccess, currentName }: Up
 
       await updateProfile(updateData)
 
-      // Reset form
       setFormData(initialFormData)
       setUpdatePassword(false)
 
-      // Close modal and refresh profile
       onOpenChange(false)
       if (onSuccess) {
         onSuccess()

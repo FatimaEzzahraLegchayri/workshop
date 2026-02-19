@@ -18,7 +18,6 @@ export default function SignupPage() {
     setError('');
     setLoading(true);
 
-    // Validation
     if (!email || !password || !confirmPassword) {
       setError('Please fill in all fields');
       setLoading(false);
@@ -39,7 +38,6 @@ export default function SignupPage() {
 
     try {
       const user = await signup(name, email, password);
-      // Redirect to login or dashboard after successful signup
       router.push('/login');
     } catch (err) {
       setError(err.message || 'Signup failed. Please try again.');

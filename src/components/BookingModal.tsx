@@ -14,12 +14,13 @@ import { Label } from '@/components/ui/label'
 import { newBooking } from '@/lib/service/bookingService'
 import { Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
+import { useTranslations } from 'next-intl' 
 
 interface Workshop {
   id: string
   title: string
-  date: string // Original date format from Firestore
-  startTime: string // Original time format from Firestore
+  date: string
+  startTime: string
   endTime?: string
   price: number
 }
@@ -42,8 +43,8 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
   const [error, setError] = useState('')
   const [formData, setFormData] = useState(initialFormData)
   const [success, setSuccess] = useState(false)
+  const t = useTranslations('bookingModal')
 
-  // Reset form when modal opens/closes
   useEffect(() => {
     if (!open) {
       setFormData(initialFormData)
@@ -54,7 +55,7 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    setError('') // Clear error when user starts typing
+    setError('') 
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -72,17 +73,12 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
       await newBooking({
         workshopId: workshop.id,
         name: formData.name,
-        email: formData.email,
+        email: formData.email ? formData.email.trim().toLowerCase() : null,
         phone: formData.phone,
       })
 
-      // Show success message
       setSuccess(true)
-      
-      // Reset form
       setFormData(initialFormData)
-
-      // Close modal after a short delay and refresh workshops
       setTimeout(() => {
         onOpenChange(false)
         if (onSuccess) {
@@ -96,17 +92,16 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
     }
   }
 
-  // Format time from "10:00" to "10:00 AM"
   const formatTime = (timeString: string) => {
     if (!timeString) return ''
+    
     const [hours, minutes] = timeString.split(':')
-    const hour = parseInt(hours, 10)
-    const ampm = hour >= 12 ? 'PM' : 'AM'
-    const displayHour = hour % 12 || 12
-    return `${displayHour}:${minutes} ${ampm}`
+    const displayHour = hours.padStart(2, '0')
+    const displayMinutes = minutes.padStart(2, '0')
+    
+    return `${displayHour}:${displayMinutes}`
   }
 
-  // Format date from "2026-01-18" to "Saturday, Jan 18"
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -124,9 +119,9 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Book Workshop</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
           <DialogDescription>
-            Complete your booking for <strong>{workshop.title}</strong>
+            {t('description', { workshop: workshop?.title })}
           </DialogDescription>
         </DialogHeader>
 
@@ -148,15 +143,14 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">Booking Confirmed!</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('bookingConfirmed')}</h3>
               <p className="text-muted-foreground">
-                Your booking has been submitted successfully.
+                {t('bookingSubmitted')}
               </p>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Workshop Info */}
             <div className="bg-muted/50 p-4 rounded-lg space-y-2 text-sm">
               <div className="font-semibold">{workshop.title}</div>
               <div className="text-muted-foreground">
@@ -168,38 +162,38 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
 
             <div className="space-y-4 pt-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name *</Label>
+                <Label htmlFor="name">{t('name')}</Label>
                 <Input
                   id="name"
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Enter your full name"
+                  placeholder={t('namePlaceholder')}
                   required
                   disabled={loading}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('email')}</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  placeholder="Enter your email"                
+                  placeholder={t('emailPlaceholder')}                
                   disabled={loading}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number *</Label>
+                <Label htmlFor="phone">{t('phone')}</Label>
                 <Input
                   id="phone"
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
-                  placeholder="Enter your phone number"
+                  placeholder={t('phonePlaceholder')}
                   required
                   disabled={loading}
                 />
@@ -219,16 +213,16 @@ export function BookingModal({ open, onOpenChange, onSuccess, workshop }: Bookin
                 onClick={() => onOpenChange(false)}
                 disabled={loading}
               >
-                Cancel
+                {t('cancel')}
               </Button>
               <Button type="submit" disabled={loading}>
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
+                    {t('processing')}
                   </>
                 ) : (
-                  'Confirm Booking'
+                  t('confirmBooking')
                 )}
               </Button>
             </div>

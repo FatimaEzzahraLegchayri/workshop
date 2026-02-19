@@ -1,49 +1,37 @@
 import { collection, addDoc, doc, getDoc, updateDoc, getDocs, deleteDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/config';
+import { ensureAdmin } from '@/lib/helper';
+import { cloudinaryConfig } from '@/lib/cloudinaryConfig';
 
+const WORKSHOPS_COLLECTION = 'workshops';
+ 
 export async function addWorkshop(workshopData) {
   try {
-    // Check if user is authenticated
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('User must be authenticated to add workshops');
-    }
-
-    // Check if user has admin role
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (!userDocSnap.exists()) {
-      throw new Error('User not found. Access denied.');
-    }
-
-    const userData = userDocSnap.data();
-    const userRole = userData.role;
-
-    if (userRole !== 'admin') {
-      throw new Error('Access denied. Admin role required to add workshops.');
-    }
-
-    // Prepare workshop document
+    const user = await ensureAdmin();
     const now = new Date().toISOString();
+
+    let imageUrl = workshopData.image || null;
+
+    if (workshopData.image instanceof File) {
+      imageUrl = await cloudinaryConfig(workshopData.image, "workshops-covers");
+    }
+
     const workshop = {
       title: workshopData.title,
       description: workshopData.description,
       date: workshopData.date,
       startTime: workshopData.startTime,
       endTime: workshopData.endTime,
-      // duration: workshopData.duration,
       category: workshopData.category,
-      capacity: workshopData.capacity,
-      bookedSeats: 0, // Initialize with 0 booked seats
-      price: workshopData.price,
-      status: workshopData.status || 'draft', // Default to draft if not provided
-      image: workshopData.image || null, // Image URL (optional)
+      capacity: Number(workshopData.capacity),
+      bookedSeats: 0,
+      price: Number(workshopData.price),
+      status: workshopData.status || 'draft',
+      image: imageUrl,
       createdAt: now,
       updatedAt: now,
     };
 
-    // Validate required fields
     const requiredFields = ['title', 'description', 'date', 'startTime', 'endTime', 'category', 'capacity', 'price'];
     const missingFields = requiredFields.filter(field => {
       const value = workshop[field];
@@ -54,11 +42,9 @@ export async function addWorkshop(workshopData) {
       throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
     }
 
-    // Add workshop to Firestore
-    const workshopsCollection = collection(db, 'workshops');
+    const workshopsCollection = collection(db, WORKSHOPS_COLLECTION);
     const docRef = await addDoc(workshopsCollection, workshop);
 
-    // Return the created workshop with id
     return {
       id: docRef.id,
       ...workshop,
@@ -66,7 +52,8 @@ export async function addWorkshop(workshopData) {
   } catch (error) {
     if (error.message.includes('Access denied') || 
         error.message.includes('User must be authenticated') ||
-        error.message.includes('Missing required fields')) {
+        error.message.includes('Missing required fields') ||
+        error.message.includes('Cloudinary')) { 
       throw error;
     }
     throw new Error(`Failed to add workshop: ${error.message}`);
@@ -75,26 +62,12 @@ export async function addWorkshop(workshopData) {
 
 export async function updateWorkshop(workshopId, updateData) {
   try {
-    const user = auth.currentUser;
+    const user = await ensureAdmin();
     if (!user) {
       throw new Error('User must be authenticated to update workshops');
     }
 
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (!userDocSnap.exists()) {
-      throw new Error('User not found. Access denied.');
-    }
-
-    const userData = userDocSnap.data();
-    const userRole = userData.role;
-
-    if (userRole !== 'admin') {
-      throw new Error('Access denied. Admin role required to update workshops.');
-    }
-
-    const workshopDocRef = doc(db, 'workshops', workshopId);
+    const workshopDocRef = doc(db, WORKSHOPS_COLLECTION, workshopId);
     const workshopDocSnap = await getDoc(workshopDocRef);
 
     if (!workshopDocSnap.exists()) {
@@ -102,12 +75,24 @@ export async function updateWorkshop(workshopId, updateData) {
     }
 
     const updateObject = {};
-    
+    if (updateData.image) {
+      if (updateData.image instanceof File) {
+        // If it's a new file, upload to Cloudinary
+        updateObject.image = await cloudinaryConfig(updateData.image, "workshops-covers");
+      } else {
+        // If it's already a URL (string), just pass it through
+        updateObject.image = updateData.image;
+      }
+    }
     const allowedFields = ['title', 'description', 'date', 'startTime', 'endTime', 'category', 'capacity', 'bookedSeats', 'price', 'status', 'image'];
     
     allowedFields.forEach(field => {
       if (updateData.hasOwnProperty(field)) {
-        updateObject[field] = updateData[field];
+        if (field === 'capacity' || field === 'price' || field === 'bookedSeats') {
+          updateObject[field] = Number(updateData[field]);
+        } else {
+          updateObject[field] = updateData[field];
+        }
       }
     });
 
@@ -122,7 +107,6 @@ export async function updateWorkshop(workshopId, updateData) {
     const updatedDocSnap = await getDoc(workshopDocRef);
     const updatedData = updatedDocSnap.data();
 
-    // Return the updated workshop with id
     return {
       id: workshopId,
       ...updatedData,
@@ -138,43 +122,22 @@ export async function updateWorkshop(workshopId, updateData) {
   }
 }
 
+
 export async function deleteWorkshop(workshopId) {
   try {
-    // Check if user is authenticated
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('User must be authenticated to delete workshops');
-    }
+    const user = await ensureAdmin();
 
-    // Check if user has admin role
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (!userDocSnap.exists()) {
-      throw new Error('User not found. Access denied.');
-    }
-
-    const userData = userDocSnap.data();
-    const userRole = userData.role;
-
-    if (userRole !== 'admin') {
-      throw new Error('Access denied. Admin role required to delete workshops.');
-    }
-
-    // Check if workshop exists
-    const workshopDocRef = doc(db, 'workshops', workshopId);
+    const workshopDocRef = doc(db, WORKSHOPS_COLLECTION, workshopId);
     const workshopDocSnap = await getDoc(workshopDocRef);
 
     if (!workshopDocSnap.exists()) {
       throw new Error('Workshop not found.');
     }
 
-    // Delete workshop from Firestore
     await deleteDoc(workshopDocRef);
 
     return { success: true, id: workshopId };
   } catch (error) {
-    // Re-throw validation errors
     if (error.message.includes('Access denied') || 
         error.message.includes('User must be authenticated') ||
         error.message.includes('Workshop not found')) {
@@ -186,16 +149,14 @@ export async function deleteWorkshop(workshopId) {
 
 export async function getWorkshops() {
   try {
-    // Get all workshops from Firestore
-    const workshopsCollection = collection(db, 'workshops');
+    const workshopsCollection = collection(db, WORKSHOPS_COLLECTION);
     const workshopsSnapshot = await getDocs(workshopsCollection);
 
-    // Map the documents to include id
     const workshops = workshopsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
-
+console.log("workshops in bck:",workshops);
     return workshops;
   } catch (error) {
     throw new Error(`Failed to fetch workshops: ${error.message}`);
@@ -208,10 +169,9 @@ export async function confirmationEmail(emailData) {
     
     if (!brevoApiKey) {
       console.warn('Brevo API key not found. Email will not be sent.');
-      return; // Don't throw error, just skip email sending
+      return;
     }
 
-    // Format date for display
     const formatDate = (dateString) => {
       try {
         const date = new Date(dateString);
@@ -226,7 +186,6 @@ export async function confirmationEmail(emailData) {
       }
     };
 
-    // Format time for display
     const formatTime = (timeString) => {
       if (!timeString) return '';
       const [hours, minutes] = timeString.split(':');
@@ -239,7 +198,6 @@ export async function confirmationEmail(emailData) {
     const formattedDate = formatDate(emailData.workshopDate);
     const formattedTime = formatTime(emailData.workshopTime);
 
-    // Email HTML content
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -293,7 +251,6 @@ export async function confirmationEmail(emailData) {
       </html>
     `;
 
-    // Plain text content
     const textContent = `
 Booking Confirmation
 
@@ -313,7 +270,6 @@ Best regards,
 The Broderie by Bel Team
     `;
 
-    // Brevo API endpoint for sending transactional emails
     const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
@@ -341,13 +297,11 @@ The Broderie by Bel Team
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error('Brevo API error:', errorData);
-      // Don't throw error - email failure shouldn't break the booking
       return;
     }
 
     console.log('Confirmation email sent successfully');
   } catch (error) {
-    // Log error but don't throw - email failure shouldn't break the booking
     console.error('Failed to send confirmation email:', error.message);
   }
 }

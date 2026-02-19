@@ -19,18 +19,15 @@ export default function AdminLayout({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        // User not authenticated, redirect to home
         router.push('http://localhost:3000')
         return
       }
 
       try {
-        // Check user role in Firestore
         const userDocRef = doc(db, 'users', user.uid)
         const userDocSnap = await getDoc(userDocRef)
 
         if (!userDocSnap.exists()) {
-          // User document doesn't exist, redirect
           router.push('http://localhost:3000')
           return
         }
@@ -39,12 +36,10 @@ export default function AdminLayout({
         const userRole = userData.role
 
         if (userRole !== 'admin') {
-          // User is not an admin, redirect
           router.push('http://localhost:3000')
           return
         }
 
-        // User is authenticated and is admin
         setAuthorized(true)
       } catch (error) {
         console.error('Error checking user role:', error)
@@ -69,7 +64,7 @@ export default function AdminLayout({
   }
 
   if (!authorized) {
-    return null // Will redirect, so show nothing
+    return null
   }
 
   return <>{children}</>

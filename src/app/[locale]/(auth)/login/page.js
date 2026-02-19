@@ -21,7 +21,6 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
 
-    // Validation
     if (!email || !password) {
       setError('Please fill in all fields')
       setLoading(false)
@@ -30,8 +29,7 @@ export default function LoginPage() {
 
     try {
       const user = await signin(email, password)
-      // Redirect to dashboard after successful login
-      router.push('/dashboard')
+      router.push('/booking')
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.')
       setLoading(false)

@@ -11,7 +11,6 @@ export function Footer() {
     <footer className="bg-foreground text-background py-12">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {/* Brand */}
           <div className="md:col-span-2">
             <h3 className="text-3xl font-bold mb-4">{t('brand')}</h3>
             <p className="text-background/80 mb-4 max-w-md">
@@ -19,23 +18,24 @@ export function Footer() {
             </p>
             <div className="flex gap-3">
               <Button
+                asChild
                 variant="outline"
                 size="icon"
                 className="rounded-full bg-background/10 border-background/20 hover:bg-background/20"
               >
+                <a 
+                  href="https://www.instagram.com/broderie_by_bel" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on Facebook"
+                >
                 <Instagram className="h-5 w-5" />
+                </a>
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full bg-background/10 border-background/20 hover:bg-background/20"
-              >
-                <Facebook className="h-5 w-5" />
-              </Button>
+             
             </div>
           </div>
 
-          {/* Contact */}
           <div>
             <h4 className="font-bold mb-4">{t('contact.title')}</h4>
             <div className="space-y-3 text-background/80">
@@ -58,7 +58,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h4 className="font-bold mb-4">{t('links.title')}</h4>
             <ul className="space-y-2 text-background/80">

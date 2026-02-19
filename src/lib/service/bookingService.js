@@ -1,98 +1,82 @@
-import { collection, addDoc, doc, getDoc, updateDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, 
+  getDocs, runTransaction } from 'firebase/firestore';
 import { auth, db } from '@/lib/config';
-import { confirmationEmail } from '@/lib/service/workshopService';
+// import { confirmationEmail } from '@/lib/service/workshopService';
+import { ensureAdmin } from '@/lib/helper';
 
+const WORKSHOP_BOOKINGS_COLLECTION = 'workshopBookings';
+const WORKSHOPS_COLLECTION = 'workshops';
 
 export async function newBooking(bookingData) {
   try {
-    // Validate required fields
-    const requiredFields = ['workshopId', 'name', 'email', 'phone'];
-    const missingFields = requiredFields.filter(field => {
-      const value = bookingData[field];
-      return value === undefined || value === null || value === '';
-    });
+    const requiredFields = ['workshopId', 'name', 'phone'];
+    const missingFields = requiredFields.filter(field => !bookingData[field]?.trim());
 
     if (missingFields.length > 0) {
       throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(bookingData.email)) {
-      throw new Error('Invalid email format');
+    let formattedEmail = null;
+    if (bookingData.email && bookingData.email.trim() !== '') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(bookingData.email)) {
+        throw new Error('Invalid email format');
+      }
+      formattedEmail = bookingData.email.trim().toLowerCase();
     }
 
-    // Check if workshop exists
-    const workshopDocRef = doc(db, 'workshops', bookingData.workshopId);
-    const workshopDocSnap = await getDoc(workshopDocRef);
-
-    if (!workshopDocSnap.exists()) {
-      throw new Error('Workshop not found.');
-    }
-
-    const workshop = workshopDocSnap.data();
-    
-    // Check if workshop is available for booking
-    if (workshop.status !== 'PUBLISHED') {
-      throw new Error('This workshop is not available for booking.');
-    }
-
-    // Check if workshop has available seats
-    const availableSeats = workshop.capacity - (workshop.bookedSeats || 0);
-    if (availableSeats <= 0) {
-      throw new Error('Workshop is fully booked.');
-    }
-
-    // Prepare booking document
+    const workshopDocRef = doc(db, WORKSHOPS_COLLECTION, bookingData.workshopId);
+    const bookingsCollection = collection(db, WORKSHOP_BOOKINGS_COLLECTION);
     const now = new Date().toISOString();
-    const booking = {
-      workshopId: bookingData.workshopId,
-      workshopTitle: workshop.title, // Store workshop title for easier queries
-      name: bookingData.name.trim(),
-      email: bookingData.email.trim().toLowerCase(),
-      phone: bookingData.phone.trim(),
-      status: 'pending', // Booking status: pending, confirmed, cancelled
-      createdAt: now,
-      updatedAt: now,
-    };
 
-    // Add booking to Firestore
-    const bookingsCollection = collection(db, 'bookings');
-    const docRef = await addDoc(bookingsCollection, booking);
+    const finalBooking = await runTransaction(db, async (transaction) => {
+      const workshopSnap = await transaction.get(workshopDocRef);
 
-    // Update workshop's bookedSeats count
-    // Note: This is a simple increment. In production, you might want to use a transaction
-    // to ensure atomicity when multiple bookings happen simultaneously
-    await updateDoc(workshopDocRef, {
-      bookedSeats: (workshop.bookedSeats || 0) + 1,
-      updatedAt: now,
+      if (!workshopSnap.exists()) {
+        throw new Error('Workshop not found.');
+      }
+
+      const workshop = workshopSnap.data();
+
+      if (workshop.status !== 'PUBLISHED') {
+        throw new Error('This workshop is not available for booking.');
+      }
+
+      const currentBooked = workshop.bookedSeats || 0;
+      if (currentBooked >= workshop.capacity) {
+        throw new Error('Workshop is fully booked.');
+      }
+
+      const newBookingRef = doc(bookingsCollection); 
+      const booking = {
+        workshopId: bookingData.workshopId,
+        workshopTitle: workshop.title,
+        name: bookingData.name.trim(),
+        email: formattedEmail,
+        phone: bookingData.phone.trim(),
+        status: 'pending',
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      transaction.set(newBookingRef, booking);
+      transaction.update(workshopDocRef, {
+        bookedSeats: currentBooked + 1,
+        updatedAt: now,
+      });
+
+      return { id: newBookingRef.id, ...booking };
     });
 
-    // Send confirmation email (don't wait for it to complete)
-    // confirmationEmail({
-    //   toEmail: booking.email,
-    //   toName: booking.name,
-    //   workshopTitle: workshop.title,
-    //   workshopDate: workshop.date,
-    //   workshopTime: workshop.startTime + (workshop.endTime ? ` - ${workshop.endTime}` : ''),
-    //   workshopPrice: workshop.price,
-    // }).catch(error => {
-    //   // Email sending errors are logged but don't affect the booking
-    //   console.error('Email sending failed:', error);
-    // });
+   
+    return finalBooking;
 
-    // Return the created booking with id
-    return {
-      id: docRef.id,
-      ...booking,
-    };
   } catch (error) {
-    // Re-throw validation errors
-    if (error.message.includes('Missing required fields') ||
-        error.message.includes('Invalid email format') ||
-        error.message.includes('Workshop not found') ||
-        error.message.includes('not available for booking') ||
-        error.message.includes('fully booked')) {
+    if (error.message.includes('Missing') || 
+        error.message.includes('format') || 
+        error.message.includes('not found') || 
+        error.message.includes('available') || 
+        error.message.includes('booked')) {
       throw error;
     }
     throw new Error(`Failed to create booking: ${error.message}`);
@@ -101,32 +85,11 @@ export async function newBooking(bookingData) {
 
 export async function getBookings() {
   try {
-    // Check if user is authenticated
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('User must be authenticated to view bookings');
-    }
+    const user = await ensureAdmin();
 
-    // Check if user has admin role
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (!userDocSnap.exists()) {
-      throw new Error('User not found. Access denied.');
-    }
-
-    const userData = userDocSnap.data();
-    const userRole = userData.role;
-
-    if (userRole !== 'admin') {
-      throw new Error('Access denied. Admin role required to view bookings.');
-    }
-
-    // Get all bookings from Firestore
-    const bookingsCollection = collection(db, 'bookings');
+    const bookingsCollection = collection(db, WORKSHOP_BOOKINGS_COLLECTION);
     const bookingsSnapshot = await getDocs(bookingsCollection);
 
-    // Map the documents to include id
     const bookings = bookingsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
@@ -134,11 +97,68 @@ export async function getBookings() {
 
     return bookings;
   } catch (error) {
-    // Re-throw validation errors
     if (error.message.includes('Access denied') || 
         error.message.includes('User must be authenticated')) {
       throw error;
     }
     throw new Error(`Failed to fetch bookings: ${error.message}`);
+  }
+}
+ 
+export async function updateWorkshopBookingStatus(bookingId, newStatus) {
+  const validStatuses = ['pending', 'confirmed', 'canceled'];
+  
+  if (!validStatuses.includes(newStatus)) {
+    throw new Error("Invalid status. Use 'pending', 'confirmed', or 'canceled'.");
+  }
+
+  try {
+    await runTransaction(db, async (transaction) => {
+      const bookingRef = doc(db, WORKSHOP_BOOKINGS_COLLECTION, bookingId);
+      const bookingSnap = await transaction.get(bookingRef);
+
+      if (!bookingSnap.exists()) {
+        throw new Error("Booking not found.");
+      }
+
+      const bookingData = bookingSnap.data();
+      const oldStatus = bookingData.status;
+      const workshopId = bookingData.workshopId;
+      const workshopRef = doc(db, WORKSHOPS_COLLECTION, workshopId);
+      const workshopSnap = await transaction.get(workshopRef);
+
+      if (!workshopSnap.exists()) {
+        throw new Error("Associated workshop not found.");
+      }
+
+      const workshopData = workshopSnap.data();
+      let seatAdjustment = 0;
+
+      if (newStatus === 'canceled' && oldStatus !== 'canceled') {
+        seatAdjustment = -1;
+      } 
+      else if (oldStatus === 'canceled' && newStatus !== 'canceled') {
+        seatAdjustment = 1;
+      }
+
+      transaction.update(bookingRef, {
+        status: newStatus,
+        updatedAt: new Date().toISOString()
+      });
+
+      if (seatAdjustment !== 0) {
+        const newCount = (workshopData.bookedSeats || 0) + seatAdjustment;
+        
+        transaction.update(workshopRef, {
+          bookedSeats: Math.max(0, newCount),
+          updatedAt: new Date().toISOString()
+        });
+      }
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Status update transaction failed:", error);
+    throw error;
   }
 }
