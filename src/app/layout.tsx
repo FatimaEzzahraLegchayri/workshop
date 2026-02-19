@@ -6,6 +6,19 @@ import { getMessages, getLocale } from 'next-intl/server'
 import { defaultLocale } from '@/lib/i18n-config'
 import "@/app/globals.css"
 import { Analytics } from "@vercel/analytics/react"
+import { Bodoni_Moda, Cormorant_Garamond } from "next/font/google";
+
+const bodoni = Bodoni_Moda({ 
+  subsets: ["latin"], 
+  variable: "--font-elegant" 
+});
+
+const cormorant = Cormorant_Garamond({ 
+  subsets: ["latin"], 
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600", "700"]
+});
+
 
 const lexend = Lexend({ subsets: ["latin"], variable: "--font-lexend" })
 const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat" })
@@ -51,8 +64,8 @@ export default async function RootLayout({
   const messages = await getMessages()
 
   return (
-    <html lang={locale}>
-      <body className={`${lexend.variable} ${caveat.variable} font-sans antialiased`}>
+    <html lang={locale} className={`${bodoni.variable} ${cormorant.variable}`}>
+      <body>
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
         </NextIntlClientProvider>
