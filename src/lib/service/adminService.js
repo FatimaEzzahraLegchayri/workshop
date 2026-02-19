@@ -7,6 +7,7 @@ import { ensureAdmin } from '../helper';
 export async function updateProfile(profileData) {
   try {
     await ensureAdmin()
+    const userDocRef = doc(db, 'users', user.uid); 
 
     const updateData = {};
     let passwordUpdated = false;
@@ -74,8 +75,15 @@ export async function updateProfile(profileData) {
 
 export async function getProfile() {
   try {
-    await ensureAdmin()
+    const user = await ensureAdmin()
+    const userDocRef = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(userDocRef);
 
+    if (!docSnap.exists()) {
+      throw new Error('User data not found in database');
+    }
+
+    const userData = docSnap.data();
     return {
       uid: user.uid,
       email: user.email,
