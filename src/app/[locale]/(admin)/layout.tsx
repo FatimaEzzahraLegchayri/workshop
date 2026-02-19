@@ -19,7 +19,7 @@ export default function AdminLayout({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        router.push('http://localhost:3000')
+        router.push('/')
         return
       }
 
@@ -28,7 +28,7 @@ export default function AdminLayout({
         const userDocSnap = await getDoc(userDocRef)
 
         if (!userDocSnap.exists()) {
-          router.push('http://localhost:3000')
+          router.push('/')
           return
         }
 
@@ -36,14 +36,14 @@ export default function AdminLayout({
         const userRole = userData.role
 
         if (userRole !== 'admin') {
-          router.push('http://localhost:3000')
+          router.push('/')
           return
         }
 
         setAuthorized(true)
       } catch (error) {
         console.error('Error checking user role:', error)
-        router.push('http://localhost:3000')
+        router.push('/')
       } finally {
         setLoading(false)
       }
